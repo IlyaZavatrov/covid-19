@@ -108,7 +108,7 @@ ClassMethod Import(pSelectMode As %Library.Integer = {$zu(115,5)}, pFileName As 
 ClassMethod GetFilteredCountries(filter As %String) As %ResultSet
   {
     set query = "SELECT code, name, continent, region, surfacearea, independenceyear, population, lifeexpectancy, gnp, gnpold, localname, governmentform, headofstate, capital"
-    set condition = ""
+    set condition = " "
     if ($length(filter) > 0) {
       set condition = " WHERE name LIKE '%" _ filter _ "%'"
     }
