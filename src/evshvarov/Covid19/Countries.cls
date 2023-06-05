@@ -97,12 +97,28 @@ ClassMethod Import(pSelectMode As %Library.Integer = {$zu(115,5)}, pFileName As 
 				set tStatus = tMe.%Save()
 				if $$$ISOK(tStatus) { set tCounter = tCounter + 1 }
 			}
+			
 		}
 	}
 	set %sqlcontext.%SQLCODE = 0
 	set %sqlcontext.%ROWCOUNT = tCounter
 	set pRecordCount = tCounter
 	quit tCounter
+}
+ClassMethod GetFilteredCountries(filter As %String) As %ResultSet
+  {
+    set query = "SELECT code, name, continent, region, surfacearea, independenceyear, population, lifeexpectancy, gnp, gnpold, localname, governmentform, headofstate, capital"
+    set condition = ""
+    if ($length(filter) > 0) {
+      set condition = " WHERE name LIKE '%" _ filter _ "%'"
+    }
+    set query = query _ condition
+    set statement = ##class(%SQL.Statement).%New()
+    set result = statement.%Prepare(query)
+    if result {
+      do statement.%Execute()
+      quit statement.%ResultSet()
+    }
 }
 
 Parameter ROWTYPE = "code VARCHAR(250),name VARCHAR(250),continent VARCHAR(250),region VARCHAR(250),surface_area INTEGER,independence_year INTEGER,population INTEGER,life_expectancy MONEY,gnp DOUBLE,gnp_old INTEGER,local_name VARCHAR(250),government_form VARCHAR(250),head_of_state VARCHAR(250),capital INTEGER,code2 VARCHAR(250)";
